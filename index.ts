@@ -27,7 +27,7 @@ const run = async () => {
     execSync(`git config --global advice.detachedHead false`);
 
     const messagesToPost = prBranches
-      .map(({ ref, id, title }) => {
+      .map(({ ref, id }) => {
         const branchesToCompare = prBranches.filter(
           branch => branch.ref !== ref,
         );
@@ -98,8 +98,10 @@ const run = async () => {
             "",
             "This PR has conflicts with:",
             "",
+            "Number | Title | Branch",
+            "--- | --- | ---",
             `${conflictingBranches
-              .map(({ id, title }) => `#${id} - ${title}`)
+              .map(({ id, title, ref }) => `**#${id}** | ${title} | ${ref}`)
               .join("\n")}`,
             "",
             "You may want to resolve the conflicts before merging.",
