@@ -23,6 +23,8 @@
     "husky": "^4.2.3"
   },
   "husky": {
-    "precommit": "npm run build && git add ."
+    "hooks": {
+      "pre-commit": "npm run build && git add ."
+    }
   }
 }
