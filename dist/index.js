@@ -7545,29 +7545,33 @@ var core = __importStar(__webpack_require__(310));
 var github = __importStar(__webpack_require__(462));
 var child_process_1 = __webpack_require__(129);
 var run = function () { return __awaiter(void 0, void 0, void 0, function () {
-    var repoToken, octokit, pullRequests, existingIssues, prBranches_1, error_1;
+    var repoToken, octokit_1, pullRequests, existingIssues, prBranches_1, messagesToPost, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 3, , 4]);
+                _a.trys.push([0, 4, , 5]);
                 repoToken = core.getInput("repo-token");
-                octokit = new github.GitHub(repoToken);
-                return [4 /*yield*/, octokit.pulls.list(__assign(__assign({}, github.context.repo), { state: "open" }))];
+                octokit_1 = new github.GitHub(repoToken);
+                return [4 /*yield*/, octokit_1.pulls.list(__assign(__assign({}, github.context.repo), { state: "open" }))];
             case 1:
                 pullRequests = _a.sent();
-                return [4 /*yield*/, octokit.issues.listForRepo(__assign({}, github.context.repo))];
+                return [4 /*yield*/, octokit_1.issues.listForRepo(__assign({}, github.context.repo))];
             case 2:
                 existingIssues = _a.sent();
-                prBranches_1 = pullRequests.data.map(function (pr) { return pr.head.ref; });
+                prBranches_1 = pullRequests.data.map(function (pr) { return ({
+                    ref: pr.head.ref,
+                    id: pr.id,
+                }); });
                 child_process_1.execSync('git config --global user.email "you@example.com"');
                 child_process_1.execSync('git config --global user.name "Your Name"');
                 child_process_1.execSync("git config --global advice.detachedHead false");
-                prBranches_1.forEach(function (branch) {
-                    var branchesToCompare = prBranches_1.filter(function (b) { return b !== branch; });
-                    child_process_1.execSync("git checkout origin/" + branch);
+                messagesToPost = prBranches_1.map(function (_a) {
+                    var ref = _a.ref, id = _a.id;
+                    var branchesToCompare = prBranches_1.filter(function (branch) { return branch.ref !== ref; });
+                    child_process_1.execSync("git checkout origin/" + ref);
                     var conflictingBranches = branchesToCompare.filter(function (branchToTryMergingIn) {
                         try {
-                            child_process_1.execSync("git merge origin/" + branchToTryMergingIn + " --no-commit --no-ff && git merge --abort");
+                            child_process_1.execSync("git merge origin/" + branchToTryMergingIn.ref + " --no-commit --no-ff && git merge --abort");
                             return false;
                         }
                         catch (e) {
@@ -7576,14 +7580,34 @@ var run = function () { return __awaiter(void 0, void 0, void 0, function () {
                             return true;
                         }
                     });
-                    console.log({ branch: branch, conflictingBranches: conflictingBranches });
+                    return { ref: ref, conflictingBranches: conflictingBranches, pullRequestId: id };
                 });
-                return [3 /*break*/, 4];
+                return [4 /*yield*/, messagesToPost.reduce(function (promise, _a) {
+                        var pullRequestId = _a.pullRequestId, conflictingBranches = _a.conflictingBranches;
+                        return __awaiter(void 0, void 0, void 0, function () {
+                            return __generator(this, function (_b) {
+                                switch (_b.label) {
+                                    case 0: return [4 /*yield*/, promise];
+                                    case 1:
+                                        _b.sent();
+                                        return [2 /*return*/, octokit_1.pulls.createReview(__assign(__assign({}, github.context.repo), { pull_number: pullRequestId, body: "\n            # Pull Request Conflicts With Others\n\n            This PR has conflicts with:\n\n            " + conflictingBranches
+                                                    .map(function (_a) {
+                                                    var id = _a.id, ref = _a.ref;
+                                                    return "#" + id + " - " + ref;
+                                                })
+                                                    .join("\n") + "\n          " }))];
+                                }
+                            });
+                        });
+                    }, Promise.resolve())];
             case 3:
+                _a.sent();
+                return [3 /*break*/, 5];
+            case 4:
                 error_1 = _a.sent();
                 core.setFailed(error_1.message);
-                return [3 /*break*/, 4];
-            case 4: return [2 /*return*/];
+                return [3 /*break*/, 5];
+            case 5: return [2 /*return*/];
         }
     });
 }); };

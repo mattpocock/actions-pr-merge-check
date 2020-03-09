@@ -9,7 +9,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Fetch Git History
-        run: git fetch --tags
+        run: git fetch --all
       - name: Hello world action step
         uses: ./
         with:
