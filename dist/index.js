@@ -7545,19 +7545,16 @@ var core = __importStar(__webpack_require__(310));
 var github = __importStar(__webpack_require__(462));
 var child_process_1 = __webpack_require__(129);
 var run = function () { return __awaiter(void 0, void 0, void 0, function () {
-    var repoToken, octokit_1, pullRequests, existingIssues, prBranches_1, messagesToPost, error_1;
+    var repoToken, octokit_1, pullRequests, prBranches_1, messagesToPost, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 4, , 5]);
+                _a.trys.push([0, 3, , 4]);
                 repoToken = core.getInput("repo-token");
                 octokit_1 = new github.GitHub(repoToken);
                 return [4 /*yield*/, octokit_1.pulls.list(__assign(__assign({}, github.context.repo), { state: "open" }))];
             case 1:
                 pullRequests = _a.sent();
-                return [4 /*yield*/, octokit_1.issues.listForRepo(__assign({}, github.context.repo))];
-            case 2:
-                existingIssues = _a.sent();
                 prBranches_1 = pullRequests.data.map(function (pr) { return ({
                     ref: pr.head.ref,
                     id: pr.number,
@@ -7590,7 +7587,7 @@ var run = function () { return __awaiter(void 0, void 0, void 0, function () {
                                     case 0: return [4 /*yield*/, promise];
                                     case 1:
                                         _b.sent();
-                                        return [2 /*return*/, octokit_1.pulls.createReview(__assign(__assign({}, github.context.repo), { pull_number: pullRequestId, body: "\n            # Pull Request Conflicts With Others\n\n            This PR has conflicts with:\n\n            " + conflictingBranches
+                                        return [2 /*return*/, octokit_1.issues.createComment(__assign(__assign({}, github.context.repo), { issue_number: pullRequestId, body: "\n            # Pull Request Conflicts With Others\n\n            This PR has conflicts with:\n\n            " + conflictingBranches
                                                     .map(function (_a) {
                                                     var id = _a.id, ref = _a.ref;
                                                     return "#" + id + " - " + ref;
@@ -7600,15 +7597,15 @@ var run = function () { return __awaiter(void 0, void 0, void 0, function () {
                             });
                         });
                     }, Promise.resolve())];
-            case 3:
+            case 2:
                 _a.sent();
-                return [3 /*break*/, 5];
-            case 4:
+                return [3 /*break*/, 4];
+            case 3:
                 error_1 = _a.sent();
                 console.error(error_1);
                 core.setFailed(error_1.message);
-                return [3 /*break*/, 5];
-            case 5: return [2 /*return*/];
+                return [3 /*break*/, 4];
+            case 4: return [2 /*return*/];
         }
     });
 }); };

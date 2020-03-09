@@ -16,10 +16,6 @@ const run = async () => {
     //   state: "open",
     // });
 
-    const existingIssues = await octokit.issues.listForRepo({
-      ...github.context.repo,
-    });
-
     const prBranches = pullRequests.data.map(pr => ({
       ref: pr.head.ref,
       id: pr.number,
@@ -53,9 +49,9 @@ const run = async () => {
     await messagesToPost.reduce(
       async (promise, { pullRequestId, conflictingBranches }) => {
         await promise;
-        return octokit.pulls.createReview({
+        return octokit.issues.createComment({
           ...github.context.repo,
-          pull_number: pullRequestId,
+          issue_number: pullRequestId,
           body: `
             # Pull Request Conflicts With Others
 
