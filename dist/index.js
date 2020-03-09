@@ -7561,10 +7561,10 @@ var run = function () { return __awaiter(void 0, void 0, void 0, function () {
                 prBranches_1 = pullRequests.data.map(function (pr) { return pr.head.ref; });
                 prBranches_1.forEach(function (branch) {
                     var branchesToCompare = prBranches_1.filter(function (b) { return b !== branch; });
-                    child_process_1.execSync("git checkout " + branch);
+                    child_process_1.execSync("git checkout origin/" + branch);
                     var conflictingBranches = branchesToCompare.filter(function (branchToTryMergingIn) {
                         try {
-                            child_process_1.execSync("git merge " + branchToTryMergingIn + " --no-commit --no-ff && git merge --abort");
+                            child_process_1.execSync("git merge origin/" + branchToTryMergingIn + " --no-commit --no-ff && git merge --abort");
                             return false;
                         }
                         catch (e) {

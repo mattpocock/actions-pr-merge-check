@@ -24,13 +24,13 @@ const run = async () => {
 
     prBranches.forEach(branch => {
       const branchesToCompare = prBranches.filter(b => b !== branch);
-      execSync(`git checkout ${branch}`);
+      execSync(`git checkout origin/${branch}`);
 
       const conflictingBranches = branchesToCompare.filter(
         branchToTryMergingIn => {
           try {
             execSync(
-              `git merge ${branchToTryMergingIn} --no-commit --no-ff && git merge --abort`,
+              `git merge origin/${branchToTryMergingIn} --no-commit --no-ff && git merge --abort`,
             );
             return false;
           } catch (e) {
