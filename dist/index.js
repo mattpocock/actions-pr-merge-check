@@ -7583,10 +7583,39 @@ var run = function () { return __awaiter(void 0, void 0, void 0, function () {
                 return [4 /*yield*/, messagesToPost.reduce(function (promise, _a) {
                         var pullRequestId = _a.pullRequestId, conflictingBranches = _a.conflictingBranches;
                         return __awaiter(void 0, void 0, void 0, function () {
+                            var previousComments, commentsToDelete;
                             return __generator(this, function (_b) {
                                 switch (_b.label) {
                                     case 0: return [4 /*yield*/, promise];
                                     case 1:
+                                        _b.sent();
+                                        return [4 /*yield*/, octokit_1.issues.listComments(__assign(__assign({}, github.context.repo), { issue_number: pullRequestId }))];
+                                    case 2:
+                                        previousComments = _b.sent();
+                                        commentsToDelete = previousComments.data.filter(function (comment) {
+                                            comment.body.includes([
+                                                "### Pull Request Conflicts With Others",
+                                                "",
+                                                "This PR has conflicts with:",
+                                            ].join("\n"));
+                                        });
+                                        return [4 /*yield*/, commentsToDelete.reduce(function (deletePromise, _a) {
+                                                var id = _a.id;
+                                                return __awaiter(void 0, void 0, void 0, function () {
+                                                    return __generator(this, function (_b) {
+                                                        switch (_b.label) {
+                                                            case 0: return [4 /*yield*/, deletePromise];
+                                                            case 1:
+                                                                _b.sent();
+                                                                return [4 /*yield*/, octokit_1.issues.deleteComment(__assign(__assign({}, github.context.repo), { comment_id: id }))];
+                                                            case 2:
+                                                                _b.sent();
+                                                                return [2 /*return*/];
+                                                        }
+                                                    });
+                                                });
+                                            }, Promise.resolve())];
+                                    case 3:
                                         _b.sent();
                                         return [2 /*return*/, octokit_1.issues.createComment(__assign(__assign({}, github.context.repo), { issue_number: pullRequestId, body: [
                                                     "### Pull Request Conflicts With Others",

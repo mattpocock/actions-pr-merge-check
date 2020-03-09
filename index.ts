@@ -50,6 +50,30 @@ const run = async () => {
     await messagesToPost.reduce(
       async (promise, { pullRequestId, conflictingBranches }) => {
         await promise;
+
+        const previousComments = await octokit.issues.listComments({
+          ...github.context.repo,
+          issue_number: pullRequestId,
+        });
+
+        const commentsToDelete = previousComments.data.filter(comment => {
+          comment.body.includes(
+            [
+              "### Pull Request Conflicts With Others",
+              "",
+              "This PR has conflicts with:",
+            ].join("\n"),
+          );
+        });
+
+        await commentsToDelete.reduce(async (deletePromise, { id }) => {
+          await deletePromise;
+          await octokit.issues.deleteComment({
+            ...github.context.repo,
+            comment_id: id,
+          });
+        }, Promise.resolve() as any);
+
         return octokit.issues.createComment({
           ...github.context.repo,
           issue_number: pullRequestId,
