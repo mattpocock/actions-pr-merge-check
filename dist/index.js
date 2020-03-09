@@ -7593,7 +7593,7 @@ var run = function () { return __awaiter(void 0, void 0, void 0, function () {
                                     case 2:
                                         previousComments = _b.sent();
                                         commentsToDelete = previousComments.data.filter(function (comment) {
-                                            comment.body.includes([
+                                            return comment.body.includes([
                                                 "### Pull Request Conflicts With Others",
                                                 "",
                                                 "This PR has conflicts with:",

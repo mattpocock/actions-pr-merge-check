@@ -57,7 +57,7 @@ const run = async () => {
         });
 
         const commentsToDelete = previousComments.data.filter(comment => {
-          comment.body.includes(
+          return comment.body.includes(
             [
               "### Pull Request Conflicts With Others",
               "",
