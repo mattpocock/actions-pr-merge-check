@@ -1,0 +1,15 @@
+on: [push]
+
+jobs:
+  check_pr_mergeability:
+    runs-on: ubuntu-latest
+    name: Check PR Mergeability
+    steps:
+      # To use this repository's private action, you must check out the repository
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Hello world action step
+        uses: ./
+        with:
+          repo-token: '${{ secrets.API_TOKEN_GITHUB }}'
+          
