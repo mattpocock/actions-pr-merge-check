@@ -22,6 +22,9 @@ const run = async () => {
 
     const prBranches = pullRequests.data.map(pr => pr.head.ref);
 
+    execSync('git config --global user.email "you@example.com"');
+    execSync('git config --global user.name "Your Name"');
+
     prBranches.forEach(branch => {
       const branchesToCompare = prBranches.filter(b => b !== branch);
       execSync(`git checkout origin/${branch}`);
