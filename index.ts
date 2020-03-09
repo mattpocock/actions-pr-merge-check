@@ -51,7 +51,6 @@ const run = async () => {
         await promise;
         return octokit.issues.createComment({
           ...github.context.repo,
-          owner: "Automated GitHub Check",
           issue_number: pullRequestId,
           body: [
             "# Pull Request Conflicts With Others",
