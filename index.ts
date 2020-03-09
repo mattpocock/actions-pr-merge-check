@@ -22,4 +22,6 @@ const run = async () => {
   }
 };
 
-run();
+run().catch(e => {
+  core.setFailed(e);
+});
