@@ -15,8 +15,8 @@ const run = async () => {
       state: "open",
     });
 
-    console.log(JSON.stringify(pullRequests, null, 2));
-    console.log(JSON.stringify(existingIssues, null, 2));
+    console.log(JSON.stringify(pullRequests.data, null, 2));
+    console.log(JSON.stringify(existingIssues.data, null, 2));
   } catch (error) {
     core.setFailed(error.message);
   }

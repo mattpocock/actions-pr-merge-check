@@ -7559,8 +7559,8 @@ var run = function () { return __awaiter(void 0, void 0, void 0, function () {
                     })];
             case 2:
                 existingIssues = _a.sent();
-                console.log(JSON.stringify(pullRequests, null, 2));
-                console.log(JSON.stringify(existingIssues, null, 2));
+                console.log(JSON.stringify(pullRequests.data, null, 2));
+                console.log(JSON.stringify(existingIssues.data, null, 2));
                 return [3 /*break*/, 4];
             case 3:
                 error_1 = _a.sent();
