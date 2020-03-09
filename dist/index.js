@@ -7569,18 +7569,22 @@ var run = function () { return __awaiter(void 0, void 0, void 0, function () {
                     var branchesToCompare = prBranches_1.filter(function (branch) { return branch.ref !== ref; });
                     child_process_1.execSync("git checkout origin/" + ref);
                     var conflictingBranches = branchesToCompare.filter(function (branchToTryMergingIn) {
+                        var hasMergeConflicts = false;
                         try {
-                            child_process_1.execSync("git merge origin/" + branchToTryMergingIn.ref + " --no-commit --no-ff && git merge --abort");
-                            return false;
+                            child_process_1.execSync("git merge origin/" + branchToTryMergingIn.ref + " --no-ff --no-commit");
                         }
                         catch (e) {
-                            /** If this failed, then the merge failed */
-                            try {
-                                child_process_1.execSync("git merge --abort");
+                            if (e.stdout
+                                .toString()
+                                .includes("fix conflicts and then commit the result")) {
+                                hasMergeConflicts = true;
                             }
-                            catch (e) { }
-                            return true;
                         }
+                        try {
+                            child_process_1.execSync("git merge --abort");
+                        }
+                        catch (e) { }
+                        return hasMergeConflicts;
                     });
                     return { ref: ref, conflictingBranches: conflictingBranches, pullRequestId: id };
                 })

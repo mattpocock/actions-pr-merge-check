@@ -35,18 +35,24 @@ const run = async () => {
 
         const conflictingBranches = branchesToCompare.filter(
           branchToTryMergingIn => {
+            let hasMergeConflicts = false;
             try {
               execSync(
-                `git merge origin/${branchToTryMergingIn.ref} --no-commit --no-ff && git merge --abort`,
+                `git merge origin/${branchToTryMergingIn.ref} --no-ff --no-commit`,
               );
-              return false;
             } catch (e) {
-              /** If this failed, then the merge failed */
-              try {
-                execSync(`git merge --abort`);
-              } catch (e) {}
-              return true;
+              if (
+                e.stdout
+                  .toString()
+                  .includes("fix conflicts and then commit the result")
+              ) {
+                hasMergeConflicts = true;
+              }
             }
+            try {
+              execSync(`git merge --abort`);
+            } catch (e) {}
+            return hasMergeConflicts;
           },
         );
         return { ref, conflictingBranches, pullRequestId: id };
