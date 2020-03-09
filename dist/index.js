@@ -7651,7 +7651,7 @@ var run = function () { return __awaiter(void 0, void 0, void 0, function () {
                                                     "",
                                                     "This PR has conflicts with:",
                                                     "",
-                                                    "Number | Title | Branch",
+                                                    "ID | Title | Branch",
                                                     "--- | --- | ---",
                                                     "" + conflictingBranches
                                                         .map(function (_a) {

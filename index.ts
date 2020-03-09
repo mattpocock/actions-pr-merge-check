@@ -98,7 +98,7 @@ const run = async () => {
             "",
             "This PR has conflicts with:",
             "",
-            "Number | Title | Branch",
+            "ID | Title | Branch",
             "--- | --- | ---",
             `${conflictingBranches
               .map(({ id, title, ref }) => `**#${id}** | ${title} | ${ref}`)
