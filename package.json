@@ -19,6 +19,10 @@
   "homepage": "https://github.com/mattpocock/actions-pr-merge-check#readme",
   "dependencies": {
     "@actions/core": "^1.2.3",
-    "@actions/github": "^2.1.1"
+    "@actions/github": "^2.1.1",
+    "husky": "^4.2.3"
+  },
+  "husky": {
+    "precommit": "npm run build && git add ."
   }
 }
