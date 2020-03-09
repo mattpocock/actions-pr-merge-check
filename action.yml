@@ -1,0 +1,9 @@
+name: "PR Conflict Checker"
+description: "Posts an issue if two PR's conflict with each other"
+inputs:
+  repo-token:
+    description: "a github token for API access"
+    required: true
+runs:
+  using: "node12"
+  main: "index.ts"
