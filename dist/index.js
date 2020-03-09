@@ -7560,7 +7560,7 @@ var run = function () { return __awaiter(void 0, void 0, void 0, function () {
                 existingIssues = _a.sent();
                 prBranches_1 = pullRequests.data.map(function (pr) { return ({
                     ref: pr.head.ref,
-                    id: pr.id,
+                    id: pr.number,
                 }); });
                 child_process_1.execSync('git config --global user.email "you@example.com"');
                 child_process_1.execSync('git config --global user.name "Your Name"');

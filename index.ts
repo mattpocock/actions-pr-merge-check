@@ -22,7 +22,7 @@ const run = async () => {
 
     const prBranches = pullRequests.data.map(pr => ({
       ref: pr.head.ref,
-      id: pr.id,
+      id: pr.number,
     }));
 
     execSync('git config --global user.email "you@example.com"');
