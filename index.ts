@@ -19,13 +19,14 @@ const run = async () => {
     const prBranches = pullRequests.data.map(pr => ({
       ref: pr.head.ref,
       id: pr.number,
+      title: pr.title,
     }));
 
     execSync('git config --global user.email "you@example.com"');
     execSync('git config --global user.name "Your Name"');
     execSync(`git config --global advice.detachedHead false`);
 
-    const messagesToPost = prBranches.map(({ ref, id }) => {
+    const messagesToPost = prBranches.map(({ ref, id, title }) => {
       const branchesToCompare = prBranches.filter(branch => branch.ref !== ref);
       execSync(`git checkout origin/${ref}`);
 
@@ -53,13 +54,15 @@ const run = async () => {
           ...github.context.repo,
           issue_number: pullRequestId,
           body: [
-            "# Pull Request Conflicts With Others",
+            "### Pull Request Conflicts With Others",
             "",
             "This PR has conflicts with:",
             "",
             `${conflictingBranches
-              .map(({ id, ref }) => `#${id} - ${ref}`)
+              .map(({ id, title }) => `#${id} - ${title}`)
               .join("\n")}`,
+            "",
+            "You may want to resolve the conflicts before merging.",
           ].join("\n"),
         });
       },
