@@ -7561,6 +7561,7 @@ var run = function () { return __awaiter(void 0, void 0, void 0, function () {
                 prBranches_1 = pullRequests.data.map(function (pr) { return pr.head.ref; });
                 child_process_1.execSync('git config --global user.email "you@example.com"');
                 child_process_1.execSync('git config --global user.name "Your Name"');
+                child_process_1.execSync("git config --global advice.detachedHead false");
                 prBranches_1.forEach(function (branch) {
                     var branchesToCompare = prBranches_1.filter(function (b) { return b !== branch; });
                     child_process_1.execSync("git checkout origin/" + branch);

@@ -24,6 +24,7 @@ const run = async () => {
 
     execSync('git config --global user.email "you@example.com"');
     execSync('git config --global user.name "Your Name"');
+    execSync(`git config --global advice.detachedHead false`);
 
     prBranches.forEach(branch => {
       const branchesToCompare = prBranches.filter(b => b !== branch);
