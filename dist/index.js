@@ -7563,7 +7563,8 @@ var run = function () { return __awaiter(void 0, void 0, void 0, function () {
                 child_process_1.execSync('git config --global user.email "you@example.com"');
                 child_process_1.execSync('git config --global user.name "Your Name"');
                 child_process_1.execSync("git config --global advice.detachedHead false");
-                messagesToPost = prBranches_1.map(function (_a) {
+                messagesToPost = prBranches_1
+                    .map(function (_a) {
                     var ref = _a.ref, id = _a.id, title = _a.title;
                     var branchesToCompare = prBranches_1.filter(function (branch) { return branch.ref !== ref; });
                     child_process_1.execSync("git checkout origin/" + ref);
@@ -7574,11 +7575,15 @@ var run = function () { return __awaiter(void 0, void 0, void 0, function () {
                         }
                         catch (e) {
                             /** If this failed, then the merge failed */
-                            child_process_1.execSync("git merge --abort");
+                            child_process_1.execSync("git reset --hard " + ref);
                             return true;
                         }
                     });
                     return { ref: ref, conflictingBranches: conflictingBranches, pullRequestId: id };
+                })
+                    .filter(function (_a) {
+                    var conflictingBranches = _a.conflictingBranches;
+                    return conflictingBranches.length > 0;
                 });
                 return [4 /*yield*/, messagesToPost.reduce(function (promise, _a) {
                         var pullRequestId = _a.pullRequestId, conflictingBranches = _a.conflictingBranches;

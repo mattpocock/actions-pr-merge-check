@@ -26,26 +26,30 @@ const run = async () => {
     execSync('git config --global user.name "Your Name"');
     execSync(`git config --global advice.detachedHead false`);
 
-    const messagesToPost = prBranches.map(({ ref, id, title }) => {
-      const branchesToCompare = prBranches.filter(branch => branch.ref !== ref);
-      execSync(`git checkout origin/${ref}`);
+    const messagesToPost = prBranches
+      .map(({ ref, id, title }) => {
+        const branchesToCompare = prBranches.filter(
+          branch => branch.ref !== ref,
+        );
+        execSync(`git checkout origin/${ref}`);
 
-      const conflictingBranches = branchesToCompare.filter(
-        branchToTryMergingIn => {
-          try {
-            execSync(
-              `git merge origin/${branchToTryMergingIn.ref} --no-commit --no-ff && git merge --abort`,
-            );
-            return false;
-          } catch (e) {
-            /** If this failed, then the merge failed */
-            execSync("git merge --abort");
-            return true;
-          }
-        },
-      );
-      return { ref, conflictingBranches, pullRequestId: id };
-    });
+        const conflictingBranches = branchesToCompare.filter(
+          branchToTryMergingIn => {
+            try {
+              execSync(
+                `git merge origin/${branchToTryMergingIn.ref} --no-commit --no-ff && git merge --abort`,
+              );
+              return false;
+            } catch (e) {
+              /** If this failed, then the merge failed */
+              execSync(`git reset --hard ${ref}`);
+              return true;
+            }
+          },
+        );
+        return { ref, conflictingBranches, pullRequestId: id };
+      })
+      .filter(({ conflictingBranches }) => conflictingBranches.length > 0);
 
     await messagesToPost.reduce(
       async (promise, { pullRequestId, conflictingBranches }) => {
