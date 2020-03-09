@@ -7587,12 +7587,18 @@ var run = function () { return __awaiter(void 0, void 0, void 0, function () {
                                     case 0: return [4 /*yield*/, promise];
                                     case 1:
                                         _b.sent();
-                                        return [2 /*return*/, octokit_1.issues.createComment(__assign(__assign({}, github.context.repo), { issue_number: pullRequestId, body: "\n            # Pull Request Conflicts With Others\n\n            This PR has conflicts with:\n\n            " + conflictingBranches
-                                                    .map(function (_a) {
-                                                    var id = _a.id, ref = _a.ref;
-                                                    return "#" + id + " - " + ref;
-                                                })
-                                                    .join("\n") + "\n          " }))];
+                                        return [2 /*return*/, octokit_1.issues.createComment(__assign(__assign({}, github.context.repo), { owner: "Automated GitHub Check", issue_number: pullRequestId, body: [
+                                                    "# Pull Request Conflicts With Others",
+                                                    "",
+                                                    "This PR has conflicts with:",
+                                                    "",
+                                                    "" + conflictingBranches
+                                                        .map(function (_a) {
+                                                        var id = _a.id, ref = _a.ref;
+                                                        return "#" + id + " - " + ref;
+                                                    })
+                                                        .join("\n"),
+                                                ].join("\n") }))];
                                 }
                             });
                         });

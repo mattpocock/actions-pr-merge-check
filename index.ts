@@ -51,16 +51,17 @@ const run = async () => {
         await promise;
         return octokit.issues.createComment({
           ...github.context.repo,
+          owner: "Automated GitHub Check",
           issue_number: pullRequestId,
-          body: `
-            # Pull Request Conflicts With Others
-
-            This PR has conflicts with:
-
-            ${conflictingBranches
+          body: [
+            "# Pull Request Conflicts With Others",
+            "",
+            "This PR has conflicts with:",
+            "",
+            `${conflictingBranches
               .map(({ id, ref }) => `#${id} - ${ref}`)
-              .join("\n")}
-          `,
+              .join("\n")}`,
+          ].join("\n"),
         });
       },
       Promise.resolve() as any,
