@@ -7533,21 +7533,25 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var core_1 = __importDefault(__webpack_require__(310));
-var github_1 = __webpack_require__(462);
+var core = __importStar(__webpack_require__(310));
+var github = __importStar(__webpack_require__(462));
 var run = function () { return __awaiter(void 0, void 0, void 0, function () {
     var repoToken, octokit, pullRequests, existingIssues, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 3, , 4]);
-                repoToken = core_1.default.getInput("repo-token");
-                octokit = new github_1.GitHub(repoToken);
-                return [4 /*yield*/, octokit.pulls.list(__assign(__assign({}, github_1.context.repo), { state: "open" }))];
+                repoToken = core.getInput("repo-token");
+                octokit = new github.GitHub(repoToken);
+                return [4 /*yield*/, octokit.pulls.list(__assign(__assign({}, github.context.repo), { state: "open" }))];
             case 1:
                 pullRequests = _a.sent();
                 return [4 /*yield*/, octokit.issues.list({
@@ -7560,14 +7564,14 @@ var run = function () { return __awaiter(void 0, void 0, void 0, function () {
                 return [3 /*break*/, 4];
             case 3:
                 error_1 = _a.sent();
-                core_1.default.setFailed(error_1.message);
+                core.setFailed(error_1.message);
                 return [3 /*break*/, 4];
             case 4: return [2 /*return*/];
         }
     });
 }); };
 run().catch(function (e) {
-    core_1.default.setFailed(e);
+    core.setFailed(e);
 });
 
 

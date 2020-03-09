@@ -1,13 +1,13 @@
-import core from "@actions/core";
-import { GitHub, context } from "@actions/github";
+import * as core from "@actions/core";
+import * as github from "@actions/github";
 
 const run = async () => {
   try {
     const repoToken = core.getInput("repo-token");
-    const octokit = new GitHub(repoToken);
+    const octokit = new github.GitHub(repoToken);
 
     const pullRequests = await octokit.pulls.list({
-      ...context.repo,
+      ...github.context.repo,
       state: "open",
     });
 
