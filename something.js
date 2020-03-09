@@ -1,1 +1,1 @@
-module.exports = 'cool'
+module.exports = 'cool stuff'
