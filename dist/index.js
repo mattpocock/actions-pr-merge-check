@@ -7543,8 +7543,9 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var core = __importStar(__webpack_require__(310));
 var github = __importStar(__webpack_require__(462));
+var child_process_1 = __webpack_require__(129);
 var run = function () { return __awaiter(void 0, void 0, void 0, function () {
-    var repoToken, octokit, pullRequests, existingIssues, error_1;
+    var repoToken, octokit, pullRequests, existingIssues, prBranches_1, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -7554,12 +7555,27 @@ var run = function () { return __awaiter(void 0, void 0, void 0, function () {
                 return [4 /*yield*/, octokit.pulls.list(__assign(__assign({}, github.context.repo), { state: "open" }))];
             case 1:
                 pullRequests = _a.sent();
-                return [4 /*yield*/, octokit.issues.list({
-                        state: "open",
-                    })];
+                return [4 /*yield*/, octokit.issues.listForRepo(__assign({}, github.context.repo))];
             case 2:
                 existingIssues = _a.sent();
-                console.log(JSON.stringify(pullRequests.data, null, 2));
+                prBranches_1 = pullRequests.data.map(function (pr) { return pr.head.ref; });
+                prBranches_1.forEach(function (branch) {
+                    var branchesToCompare = prBranches_1.filter(function (b) { return b !== branch; });
+                    child_process_1.execSync("git checkout " + branch);
+                    var conflictingBranches = branchesToCompare.filter(function (branchToTryMergingIn) {
+                        try {
+                            child_process_1.execSync("git merge " + branchToTryMergingIn + " --no-commit --no-ff && git merge --abort");
+                            return false;
+                        }
+                        catch (e) {
+                            /** If this failed, then the merge failed */
+                            child_process_1.execSync("git merge --abort");
+                            return true;
+                        }
+                    });
+                    console.log({ branch: branch, conflictingBranches: conflictingBranches });
+                });
+                // console.log(JSON.stringify(pullRequests.data.map(pr => pr), null, 2));
                 console.log(JSON.stringify(existingIssues.data, null, 2));
                 return [3 /*break*/, 4];
             case 3:
