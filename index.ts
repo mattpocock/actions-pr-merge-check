@@ -42,7 +42,9 @@ const run = async () => {
               return false;
             } catch (e) {
               /** If this failed, then the merge failed */
-              execSync(`git reset --hard ${ref}`);
+              try {
+                execSync(`git merge --abort`);
+              } catch (e) {}
               return true;
             }
           },

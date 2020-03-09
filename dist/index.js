@@ -7575,7 +7575,10 @@ var run = function () { return __awaiter(void 0, void 0, void 0, function () {
                         }
                         catch (e) {
                             /** If this failed, then the merge failed */
-                            child_process_1.execSync("git reset --hard " + ref);
+                            try {
+                                child_process_1.execSync("git merge --abort");
+                            }
+                            catch (e) { }
                             return true;
                         }
                     });
