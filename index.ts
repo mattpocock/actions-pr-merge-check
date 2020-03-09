@@ -44,7 +44,7 @@ const run = async () => {
     });
 
     // console.log(JSON.stringify(pullRequests.data.map(pr => pr), null, 2));
-    console.log(JSON.stringify(existingIssues.data, null, 2));
+    // console.log(JSON.stringify(existingIssues.data, null, 2));
   } catch (error) {
     core.setFailed(error.message);
   }

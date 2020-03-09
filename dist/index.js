@@ -7575,8 +7575,6 @@ var run = function () { return __awaiter(void 0, void 0, void 0, function () {
                     });
                     console.log({ branch: branch, conflictingBranches: conflictingBranches });
                 });
-                // console.log(JSON.stringify(pullRequests.data.map(pr => pr), null, 2));
-                console.log(JSON.stringify(existingIssues.data, null, 2));
                 return [3 /*break*/, 4];
             case 3:
                 error_1 = _a.sent();
