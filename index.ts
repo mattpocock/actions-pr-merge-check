@@ -59,32 +59,36 @@ const run = async () => {
       })
       .filter(({ conflictingBranches }) => conflictingBranches.length > 0);
 
+    /** Delete all comments from all PR's that match the signature */
+    await prBranches.reduce(async (promise, { id: pullRequestId }) => {
+      await promise;
+      const previousComments = await octokit.issues.listComments({
+        ...github.context.repo,
+        issue_number: pullRequestId,
+      });
+
+      const commentsToDelete = previousComments.data.filter(comment => {
+        return comment.body.includes(
+          [
+            "### Pull Request Conflicts With Others",
+            "",
+            "This PR has conflicts with:",
+          ].join("\n"),
+        );
+      });
+
+      await commentsToDelete.reduce(async (deletePromise, { id }) => {
+        await deletePromise;
+        await octokit.issues.deleteComment({
+          ...github.context.repo,
+          comment_id: id,
+        });
+      }, Promise.resolve() as any);
+    }, Promise.resolve());
+
     await messagesToPost.reduce(
       async (promise, { pullRequestId, conflictingBranches }) => {
         await promise;
-
-        const previousComments = await octokit.issues.listComments({
-          ...github.context.repo,
-          issue_number: pullRequestId,
-        });
-
-        const commentsToDelete = previousComments.data.filter(comment => {
-          return comment.body.includes(
-            [
-              "### Pull Request Conflicts With Others",
-              "",
-              "This PR has conflicts with:",
-            ].join("\n"),
-          );
-        });
-
-        await commentsToDelete.reduce(async (deletePromise, { id }) => {
-          await deletePromise;
-          await octokit.issues.deleteComment({
-            ...github.context.repo,
-            comment_id: id,
-          });
-        }, Promise.resolve() as any);
 
         return octokit.issues.createComment({
           ...github.context.repo,

@@ -7549,7 +7549,7 @@ var run = function () { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 3, , 4]);
+                _a.trys.push([0, 4, , 5]);
                 repoToken = core.getInput("repo-token");
                 octokit_1 = new github.GitHub(repoToken);
                 return [4 /*yield*/, octokit_1.pulls.list(__assign(__assign({}, github.context.repo), { state: "open" }))];
@@ -7592,8 +7592,9 @@ var run = function () { return __awaiter(void 0, void 0, void 0, function () {
                     var conflictingBranches = _a.conflictingBranches;
                     return conflictingBranches.length > 0;
                 });
-                return [4 /*yield*/, messagesToPost.reduce(function (promise, _a) {
-                        var pullRequestId = _a.pullRequestId, conflictingBranches = _a.conflictingBranches;
+                /** Delete all comments from all PR's that match the signature */
+                return [4 /*yield*/, prBranches_1.reduce(function (promise, _a) {
+                        var pullRequestId = _a.id;
                         return __awaiter(void 0, void 0, void 0, function () {
                             var previousComments, commentsToDelete;
                             return __generator(this, function (_b) {
@@ -7629,6 +7630,22 @@ var run = function () { return __awaiter(void 0, void 0, void 0, function () {
                                             }, Promise.resolve())];
                                     case 3:
                                         _b.sent();
+                                        return [2 /*return*/];
+                                }
+                            });
+                        });
+                    }, Promise.resolve())];
+            case 2:
+                /** Delete all comments from all PR's that match the signature */
+                _a.sent();
+                return [4 /*yield*/, messagesToPost.reduce(function (promise, _a) {
+                        var pullRequestId = _a.pullRequestId, conflictingBranches = _a.conflictingBranches;
+                        return __awaiter(void 0, void 0, void 0, function () {
+                            return __generator(this, function (_b) {
+                                switch (_b.label) {
+                                    case 0: return [4 /*yield*/, promise];
+                                    case 1:
+                                        _b.sent();
                                         return [2 /*return*/, octokit_1.issues.createComment(__assign(__assign({}, github.context.repo), { issue_number: pullRequestId, body: [
                                                     "### Pull Request Conflicts With Others",
                                                     "",
@@ -7647,15 +7664,15 @@ var run = function () { return __awaiter(void 0, void 0, void 0, function () {
                             });
                         });
                     }, Promise.resolve())];
-            case 2:
-                _a.sent();
-                return [3 /*break*/, 4];
             case 3:
+                _a.sent();
+                return [3 /*break*/, 5];
+            case 4:
                 error_1 = _a.sent();
                 console.error(error_1);
                 core.setFailed(error_1.message);
-                return [3 /*break*/, 4];
-            case 4: return [2 /*return*/];
+                return [3 /*break*/, 5];
+            case 5: return [2 /*return*/];
         }
     });
 }); };
