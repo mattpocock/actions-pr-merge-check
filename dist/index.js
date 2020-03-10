@@ -7560,6 +7560,10 @@ var run = function () { return __awaiter(void 0, void 0, void 0, function () {
                     id: pr.number,
                     title: pr.title,
                 }); });
+                prBranches_1.forEach(function (_a) {
+                    var ref = _a.ref;
+                    child_process_1.execSync("git fetch origin " + ref);
+                });
                 child_process_1.execSync('git config --global user.email "you@example.com"');
                 child_process_1.execSync('git config --global user.name "Your Name"');
                 child_process_1.execSync("git config --global advice.detachedHead false");

@@ -22,6 +22,10 @@ const run = async () => {
       title: pr.title,
     }));
 
+    prBranches.forEach(({ ref }) => {
+      execSync(`git fetch origin ${ref}`);
+    });
+
     execSync('git config --global user.email "you@example.com"');
     execSync('git config --global user.name "Your Name"');
     execSync(`git config --global advice.detachedHead false`);
