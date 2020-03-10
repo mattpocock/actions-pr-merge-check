@@ -35,14 +35,14 @@ const run = async () => {
         const branchesToCompare = prBranches.filter(
           branch => branch.ref !== ref,
         );
-        execSync(`git checkout ${ref}`);
+        execSync(`git checkout origin/${ref}`);
 
         const conflictingBranches = branchesToCompare.filter(
           branchToTryMergingIn => {
             let hasMergeConflicts = false;
             try {
               execSync(
-                `git merge ${branchToTryMergingIn.ref} --no-ff --no-commit`,
+                `git merge origin/${branchToTryMergingIn.ref} --no-ff --no-commit`,
               );
             } catch (e) {
               if (
