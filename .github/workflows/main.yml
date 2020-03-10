@@ -11,5 +11,5 @@ jobs:
       - name: Hello world action step
         uses: ./
         with:
-          repo-token: '${{ secrets.API_TOKEN_GITHUB }}'
+          repo-token: '${{ secrets.GITHUB_TOKEN }}'
           
