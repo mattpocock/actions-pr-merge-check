@@ -20,6 +20,7 @@ const run = async () => {
       ref: pr.head.ref,
       id: pr.number,
       title: pr.title,
+      baseRef: pr.base.ref
     }));
 
     prBranches.forEach(({ ref }) => {
@@ -31,9 +32,9 @@ const run = async () => {
     execSync(`git config --global advice.detachedHead false`);
 
     const messagesToPost = prBranches
-      .map(({ ref, id }) => {
+      .map(({ ref, id, baseRef }) => {
         const branchesToCompare = prBranches.filter(
-          branch => branch.ref !== ref,
+          branch => branch.ref !== ref && branch.baseRef === baseRef,
         );
         execSync(`git checkout origin/${ref}`);
 

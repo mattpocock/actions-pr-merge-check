@@ -7559,6 +7559,7 @@ var run = function () { return __awaiter(void 0, void 0, void 0, function () {
                     ref: pr.head.ref,
                     id: pr.number,
                     title: pr.title,
+                    baseRef: pr.base.ref
                 }); });
                 prBranches_1.forEach(function (_a) {
                     var ref = _a.ref;
@@ -7569,8 +7570,8 @@ var run = function () { return __awaiter(void 0, void 0, void 0, function () {
                 child_process_1.execSync("git config --global advice.detachedHead false");
                 messagesToPost = prBranches_1
                     .map(function (_a) {
-                    var ref = _a.ref, id = _a.id;
-                    var branchesToCompare = prBranches_1.filter(function (branch) { return branch.ref !== ref; });
+                    var ref = _a.ref, id = _a.id, baseRef = _a.baseRef;
+                    var branchesToCompare = prBranches_1.filter(function (branch) { return branch.ref !== ref && branch.baseRef === baseRef; });
                     child_process_1.execSync("git checkout origin/" + ref);
                     var conflictingBranches = branchesToCompare.filter(function (branchToTryMergingIn) {
                         var hasMergeConflicts = false;
